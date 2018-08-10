@@ -1,0 +1,26 @@
+基本思路：通过刷新source配置完成
+a1.sources = r1
+a1.channels = c1
+a1.sources.r1.type = TAILDIR
+a1.sources.r1.channels = c1
+a1.sources.r1.positionFile = /var/log/flume/taildir_position.json
+
+#以下为需要刷新的配置
+a1.sources.r1.filegroups = f1 f2
+a1.sources.r1.filegroups.f1 = /var/log/test1/example.log
+a1.sources.r1.filegroups.f2 = /var/log/test2/.*log.*
+
+具体方法：在flume配置模板中不添加 a1.sources.r1.filegroups及其子项，有新文件添加时，拷贝配置模板覆盖已有的配置文件，同时获取所有需要收集的日志文件路径
+及名称，追加filegroups及其子项到配置文件中
+
+收集的日志文件路径及名称的shell脚本参考 Shell repositories中的	获取指定目录下所有文件（包括子目录下的文件） 文件
+
+追加配置项的方法如下
+len=${#filelist[*]} #filelist为所有需要监控的日志文件的"路径/名称" 数组
+let len=len-1
+seqs=`seq 0 $len`
+echo a1.sources.r1.filegroups= $seqs>>$conf_path
+for i in $seqs;
+do 
+  echo "a1.sources.r1.filegroups.$i= ${filelist[$i]}">>$conf_path
+done
