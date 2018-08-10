@@ -15,7 +15,7 @@ a1.sources.r1.filegroups.f2 = /var/log/test2/.*log.*
 
 收集的日志文件路径及名称的shell脚本参考 Shell repositories中的	获取指定目录下所有文件（包括子目录下的文件） 文件
 
-追加配置项的方法如下
+追加配置项的方法如下 
 len=${#filelist[*]} #filelist为所有需要监控的日志文件的"路径/名称" 数组
 let len=len-1
 seqs=`seq 0 $len`
